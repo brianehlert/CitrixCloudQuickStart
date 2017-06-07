@@ -121,7 +121,7 @@
     "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('vmName'),'-',''),11), uniqueString(resourceGroup().id)))]",
     "diagnosticsStorageAccountName": "[variables('vhdStorageAccountName')]",
     "wadmetricsresourceid": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
-    "installScriptDownloadUrl": "https://ctxlabps.file.core.windows.net/ctxlabpsshare1/Citrix/CitrixCloudConnectorInstall.ps1?st=2017-05-05T13%3A38%3A00Z&se=2019-05-06T13%3A38%3A00Z&sp=rl&sv=2016-05-31&sr=f&sig=Jq5RramE5YNYuF7ztX5Duu3g4e88zBZAX7m5lnPoplI%3D",
+    "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
     "scriptParameters": "[concat(' -APIKey \"', parameters('citrixCloudAPIKey'), '\" -APISecret \"', parameters('citrixCloudAPISecret'), '\" -CustomerId \"', parameters('citrixCloudCustomerId'), '\" -ResourceLocationName \"', parameters('citrixCloudResourceLocationName'), '\" -DownloadDestFolder \"', parameters('citrixCloudInstallerLocation'), '\"' )]"
   },
   "resources": [
