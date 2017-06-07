@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vmName": {
+      "value": "AZCWC04"
+    },
+    "vmAdminUsername": {
+      "value": "azureuser1"
+    },
+    "vmAdminPassword": {
+      "value": "Password1@Cloud123"
+    },
+    "domainName": {
+      "value": "lab.local"
+    },
+    "domainJoinUsername": {
+      "value": "Administrator"
+    },
+    "domainJoinPassword": {
+      "value": "Cloud123"
+    },
+    "domainJoinOUPath": {
+      "value": "OU=Computers,OU=Fabric Management,DC=lab,DC=local"
+    },
+    "existingVNETName": {
+      "value": "VNet1"
+    },
+    "existingSubnetName": {
+      "value": "Control"
+    },
+    "citrixCloudAPIKey": {
+      "value": ""
+    },
+    "citrixCloudAPISecret":{
+      "value": ""
+    },
+    "citrixCloudCustomerId": {
+      "value": "tttemea3"
+    },
+    "citrixCloudResourceLocationName": {
+      "value": "PS AzureLab"
+    }
+  }
+}
