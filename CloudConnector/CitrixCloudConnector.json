@@ -4,7 +4,7 @@
   "parameters": {
     "vmName": {
       "type": "string",
-      "defaultValue": "citrixcloud"
+      "defaultValue": "CloudConnector01"
     },
     "vmAdminUsername": {
       "type": "string",
@@ -99,13 +99,6 @@
       "metadata": {
         "description": "Citrix Cloud Resource Location Name."
       }
-    },
-    "citrixCloudInstallerLocation": {
-      "type": "string",
-      "metadata": {
-        "description": "File Location of the Citrix Cloud Connector Installer."
-      },
-      "defaultValue": "c:\\temp"
     }
   },
   "variables": {
@@ -122,7 +115,7 @@
     "diagnosticsStorageAccountName": "[variables('vhdStorageAccountName')]",
     "wadmetricsresourceid": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
-    "scriptParameters": "[concat(' -APIKey \"', parameters('citrixCloudAPIKey'), '\" -APISecret \"', parameters('citrixCloudAPISecret'), '\" -CustomerId \"', parameters('citrixCloudCustomerId'), '\" -ResourceLocationName \"', parameters('citrixCloudResourceLocationName'), '\" -DownloadDestFolder \"', parameters('citrixCloudInstallerLocation'), '\"' )]"
+    "scriptParameters": "[concat(' -APIKey \"', parameters('citrixCloudAPIKey'), '\" -APISecret \"', parameters('citrixCloudAPISecret'), '\" -CustomerId \"', parameters('citrixCloudCustomerId'), '\" -ResourceLocationName \"', parameters('citrixCloudResourceLocationName'), '\"' )]"
   },
   "resources": [
     {
