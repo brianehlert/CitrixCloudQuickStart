@@ -31,32 +31,18 @@
     }
   },
   "variables": {
-    "_artifactsLocation": "https://raw.githubusercontent.com/brianehlert/RoleAssignment/master/",
     "Virtual Machine Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'd73bb868-a0df-4d4d-bd69-98a00b01fccb')]",
     "resourceName": "[concat(parameters('virtualNetworkName'), '/Microsoft.Authorization/', parameters('guid'))]",
-    "generateGuidTemplateUrl": "[concat(variables('_artifactsLocation'), 'NewGuid', '.json')]"
   },
   "resources": [
-            {
-              "apiVersion": "2015-01-01",
-              "name": "GenerateGuid",
-              "type": "Microsoft.Resources/deployments",
-              "properties": {
-                "mode": "incremental",
-                "templateLink": {
-                  "uri": "[variables('generateGuidTemplateUrl')]",
-                  "contentVersion": "1.0.0.0"
-                }
-              }
-            },
-            {
-              "apiVersion": "2014-10-01-preview",
-              "name": "[variables('resourceName')]",
-              "type": "Microsoft.Compute/virtualMachines/providers/roleAssignments",
-              "properties": {
-                "roleDefinitionId": "[variables(parameters('builtInRoleType'))]",
-                "principalId": "[parameters('principalId')]"
-              }
-            }
+    {
+      "apiVersion": "2014-10-01-preview",
+      "name": "[variables('resourceName')]",
+      "type": "Microsoft.Compute/virtualMachines/providers/roleAssignments",
+      "properties": {
+        "roleDefinitionId": "[variables(parameters('builtInRoleType'))]",
+        "principalId": "[parameters('principalId')]"
+      }
+    }
   ]
 }
