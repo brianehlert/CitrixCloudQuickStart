@@ -1,0 +1,7 @@
+{
+  "itemDisplayName": "Citrix Cloud - RBAC - Existing Virtual Network",
+  "description": "This template grants applicable role based access to an existing Virtual Network",
+  "summary": "This template grants applicable role based access to an existing Virtual Network",
+  "githubUsername": "brianehlert",
+  "dateUpdated": "2017-06-13"
+}

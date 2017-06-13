@@ -1,0 +1,62 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "principalId": {
+      "type": "string",
+      "metadata": {
+        "description": "Principal ID associated with Citrix Cloud"
+      }
+    },
+    "virtualNetworkName": {
+      "type": "string",
+      "metadata": {
+        "description": "Name of the virtual network"
+      }
+    },
+    "builtInRoleType": {
+      "type": "string",
+      "metadata": {
+        "description": "Built In Role Type for the Virtual Network"
+      },
+      "allowedValues": [
+        "Virtual Machine Contributor"
+      ]
+    },
+    "guid": {
+      "type": "string",
+      "metadata": {
+        "description": "A new GUID to assign the role to the VM"
+      }
+    }
+  },
+  "variables": {
+    "_artifactsLocation": "https://raw.githubusercontent.com/brianehlert/RoleAssignment/master/",
+    "Virtual Machine Contributor": "[concat('/subscriptions/',subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', 'd73bb868-a0df-4d4d-bd69-98a00b01fccb')]",
+    "resourceName": "[concat(parameters('virtualNetworkName'), '/Microsoft.Authorization/', parameters('guid'))]",
+    "generateGuidTemplateUrl": "[concat(variables('_artifactsLocation'), 'NewGuid', '.json')]"
+  },
+  "resources": [
+            {
+              "apiVersion": "2015-01-01",
+              "name": "GenerateGuid",
+              "type": "Microsoft.Resources/deployments",
+              "properties": {
+                "mode": "incremental",
+                "templateLink": {
+                  "uri": "[variables('generateGuidTemplateUrl')]",
+                  "contentVersion": "1.0.0.0"
+                }
+              }
+            },
+            {
+              "apiVersion": "2014-10-01-preview",
+              "name": "[variables('resourceName')]",
+              "type": "Microsoft.Compute/virtualMachines/providers/roleAssignments",
+              "properties": {
+                "roleDefinitionId": "[variables(parameters('builtInRoleType'))]",
+                "principalId": "[parameters('principalId')]"
+              }
+            }
+  ]
+}
