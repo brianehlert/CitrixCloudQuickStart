@@ -36,7 +36,7 @@
   },
   "resources": [
     {
-      "apiVersion": "2016-08-01",
+      "apiVersion": "2016-07-01",
       "name": "[variables('resourceName')]",
       "type": "Microsoft.Network/virtualNetworks/providers/roleAssignments",
       "properties": {
