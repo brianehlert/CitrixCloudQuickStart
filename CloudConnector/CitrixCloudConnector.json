@@ -163,7 +163,7 @@
       "type": "Microsoft.Network/networkSecurityGroups",
       "name": "[variables('networkSecurityGroup')]",
       "apiVersion": "2016-03-30",
-      "location": "westeurope",
+      "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
         {
