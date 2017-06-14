@@ -23,57 +23,38 @@
       "type": "string",
       "minLength": 1,
       "metadata": {
-        "description": "domain join username"
+        "description": "Domain join username"
       }
     },
     "domainJoinPassword": {
       "type": "securestring",
       "metadata": {
-        "description": "domain join password"
-      }
-    },
-    "domainJoinOUPath": {
-      "type": "string",
-      "metadata": {
-        "description": "Full OU path for the Computer Object, e.g. OU=MyComputers,DC=domain1,DC=local"
+        "description": "Domain join password"
       }
     },
     "domainName": {
       "type": "string",
       "minLength": 1,
       "metadata": {
-        "description": "Domain to join."
+        "description": "FQDN of the domain to join."
       }
     },
-    "windowsOSVersion": {
+    "vnetResourceGroupName": {
       "type": "string",
-      "defaultValue": "2016-Datacenter",
-      "allowedValues": [
-        "2012-R2-Datacenter",
-        "2016-Datacenter"
-      ],
       "metadata": {
-        "description": "The Windows version for the VM. This will pick a fully patched image of this given Windows version. Allowed values: 2008-R2-SP1, 2012-Datacenter, 2012-R2-Datacenter, 2016-Datacenter."
+        "description": "The Resource Group the existing virtual network belongs to"
       }
-    },
-    "vmSize": {
-      "type": "string",
-      "defaultValue": "Standard_A2"
-    },
-    "availabilitySetName": {
-      "type": "string",
-      "defaultValue": "as_CitrixCloudConnector"
     },
     "existingVNETName": {
       "type": "string",
       "metadata": {
-        "description": "VNET for the Cloud Connector."
+        "description": "The virtual network the the Cloud Connector will be attached."
       }
     },
     "existingSubnetName": {
       "type": "string",
       "metadata": {
-        "description": "Subnet for the Cloud Connector"
+        "description": "The subnet the Cloud Connector will get an IP address from."
       }
     },
     "citrixCloudAPIKey": {
@@ -102,16 +83,19 @@
     }
   },
   "variables": {
+    "vmSize": "Standard_A2_v2",
+    "availabilitySetName": "[concat(parameters('citrixCloudResourceLocationName'),'-availset')]",
     "imagePublisher": "MicrosoftWindowsServer",
-    "imageOffer": "WindowsServer",
+    "imageOffer": "WindowsServer-HUB",
+    "windowsOSVersion": "2016-Datacenter-HUB",
     "OSDiskName": "[concat(parameters('vmName'),'-osdisk')]",
     "nicName": "[concat(parameters('vmName'),'-nic')]",
-    "vnetId": "[resourceId(resourceGroup().name,'Microsoft.Network/virtualNetworks', parameters('existingVNETName'))]",
-    "subnetId": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('existingVNETName'), parameters('existingSubnetName'))]",
-    "networkSecurityGroup": "[concat(parameters('vmName'),'NSG')]",
+    "vnetId": "[resourceId(parameters('vnetResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('existingVNETName'))]",
+    "subnetId": "[concat(variables('vnetId'),'/subnets/', parameters('existingSubnetName'))]",
+    "networkSecurityGroup": "[concat(parameters('vmName'),'-nsg')]",
     "vhdStorageType": "Standard_LRS",
     "vhdStorageContainerName": "vhds",
-    "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('vmName'),'-',''),11), uniqueString(resourceGroup().id)))]",
+    "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('citrixCloudResourceLocationName'),'-',''),11), uniqueString(resourceGroup().id)))]",
     "diagnosticsStorageAccountName": "[variables('vhdStorageAccountName')]",
     "wadmetricsresourceid": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
@@ -166,40 +150,27 @@
       "location": "[resourceGroup().location]",
       "properties": {
         "securityRules": [
-        {
-          "name": "In_Any_Any",
-          "properties": {
-            "protocol": "*",
-            "sourcePortRange": "*",
-            "destinationPortRange": "*",
-            "sourceAddressPrefix": "*",
-            "destinationAddressPrefix": "*",
-            "access": "Allow",
-            "priority": 100,
-            "direction": "Inbound"
+          {
+            "name": "Out_Any_Any",
+            "properties": {
+              "protocol": "*",
+              "sourcePortRange": "*",
+              "destinationPortRange": "*",
+              "sourceAddressPrefix": "*",
+              "destinationAddressPrefix": "*",
+              "access": "Allow",
+              "priority": 100,
+              "direction": "Outbound"
+            }
           }
-        },
-        {
-          "name": "Out_Any_Any",
-          "properties": {
-            "protocol": "*",
-            "sourcePortRange": "*",
-            "destinationPortRange": "*",
-            "sourceAddressPrefix": "*",
-            "destinationAddressPrefix": "*",
-            "access": "Allow",
-            "priority": 100,
-            "direction": "Outbound"
-          }
-        }
-      ]
+        ]
       },
       "dependsOn": []
     },
     {
       "apiVersion": "2016-04-30-preview",
       "type": "Microsoft.Compute/availabilitySets",
-      "name": "[parameters('availabilitySetName')]",
+      "name": "[variables('availabilitySetName')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "platformUpdateDomainCount": 5,
@@ -228,7 +199,7 @@
       ],
       "properties": {
         "hardwareProfile": {
-          "vmSize": "[parameters('vmSize')]"
+          "vmSize": "[variables('vmSize')]"
         },
         "osProfile": {
           "computerName": "[parameters('vmName')]",
@@ -239,7 +210,7 @@
           "imageReference": {
             "publisher": "[variables('imagePublisher')]",
             "offer": "[variables('imageOffer')]",
-            "sku": "[parameters('windowsOSVersion')]",
+            "sku": "[variables('windowsOSVersion')]",
             "version": "latest"
           },
           "osDisk": {
@@ -577,7 +548,6 @@
         "settings": {
           "Name": "[parameters('domainName')]",
           "User": "[concat(parameters('domainName'), '\\', parameters('domainJoinUsername'))]",
-          "OUPath": "[parameters('domainJoinOUPath')]",
           "Restart": "true",
           "Options": "3"
         },
@@ -597,17 +567,17 @@
         "typeHandlerVersion": "1.8",
         "autoUpgradeMinorVersion": true,
         "settings": {
-            "fileUris": [
-              "[variables('installScriptDownloadUrl')]"
-            ],
-            "commandToExecute": "[concat('powershell -ExecutionPolicy RemoteSigned -File CitrixCloudConnectorInstall.ps1 ', variables('scriptParameters'))]"
-          },
-          "protectedSettings": {}
+          "fileUris": [
+            "[variables('installScriptDownloadUrl')]"
+          ],
+          "commandToExecute": "[concat('powershell -ExecutionPolicy RemoteSigned -File CitrixCloudConnectorInstall.ps1 ', variables('scriptParameters'))]"
         },
-        "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
-          "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),'/extensions','/JoinDomain')]"
-        ]
+        "protectedSettings": {}
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),'/extensions','/JoinDomain')]"
+      ]
     }
   ]
 }

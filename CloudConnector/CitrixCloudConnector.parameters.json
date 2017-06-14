@@ -20,19 +20,19 @@
     "domainJoinPassword": {
       "value": "Cloud123"
     },
-    "domainJoinOUPath": {
-      "value": "OU=Computers,OU=Fabric Management,DC=lab,DC=local"
+    "vnetResourceGroupName": {
+      "value": "vNet1Resource Group"
     },
     "existingVNETName": {
-      "value": "VNet1"
+      "value": "vNet1"
     },
     "existingSubnetName": {
-      "value": "Control"
+      "value": "subNet1"
     },
     "citrixCloudAPIKey": {
       "value": ""
     },
-    "citrixCloudAPISecret":{
+    "citrixCloudAPISecret": {
       "value": ""
     },
     "citrixCloudCustomerId": {
