@@ -99,7 +99,7 @@
     "diagnosticsStorageAccountName": "[variables('vhdStorageAccountName')]",
     "wadmetricsresourceid": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
-    "scriptParameters": "[concat(' -APIKey \"', parameters('citrixCloudAPIKey'), '\" -APISecret \"', parameters('citrixCloudAPISecret'), '\" -CustomerId \"', parameters('citrixCloudCustomerId'), '\" -ResourceLocationName \"', parameters('citrixCloudResourceLocationName'), '\"' )]"
+    "scriptParameters": "[concat(' -APIKey \"', trim(parameters('citrixCloudAPIKey')), '\" -APISecret \"', trim(parameters('citrixCloudAPISecret')), '\" -CustomerId \"', trim(parameters('citrixCloudCustomerId')), '\" -ResourceLocationName \"', trim(parameters('citrixCloudResourceLocationName')), '\"' )]"
   },
   "resources": [
     {
