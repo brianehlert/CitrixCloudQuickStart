@@ -99,7 +99,7 @@
     "diagnosticsStorageAccountName": "[variables('vhdStorageAccountName')]",
     "wadmetricsresourceid": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
-    "scriptParameters": "[concat('\" -CustomerId \"', trim(parameters('citrixCloudCustomerId')), '-APIClientID \"', trim(parameters('citrixCloudAPIKey')), '\" -APIClientSecret \"', trim(parameters('citrixCloudAPISecret')), '\" -ResourceLocation \"', trim(parameters('citrixCloudResourceLocationName')), '\"' )]"
+    "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation ', trim(parameters('citrixCloudResourceLocationName')))]"
   },
   "resources": [
     {
@@ -570,7 +570,7 @@
           "fileUris": [
             "[variables('installScriptDownloadUrl')]"
           ],
-          "commandToExecute": "[concat('powershell -ExecutionPolicy RemoteSigned -File DeployCitrixCloudConnector.ps1 ', variables('scriptParameters'))]"
+          "commandToExecute": "[concat('powershell -ExecutionPolicy RemoteSigned -File DeployCitrixCloudConnector.ps1', variables('scriptParameters'))]"
         },
         "protectedSettings": {}
       },
