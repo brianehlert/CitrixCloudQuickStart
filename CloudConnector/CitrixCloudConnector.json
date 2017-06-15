@@ -5,10 +5,8 @@
     "vmName": {
       "type": "string",
       "maxLength": 13,
-      "minValue": 2,
       "metadata": {
-        "description": "the name pattern that will be given to the provisionined machines",
-        "itemDisplayName": "Machine Name Prefix"
+        "description": "the name pattern that will be given to the provisionined machines"
       }
     },
     "vmAdminUsername": {
