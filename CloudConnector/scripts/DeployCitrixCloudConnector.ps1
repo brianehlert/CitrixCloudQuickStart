@@ -93,8 +93,8 @@ param(
         try {
             $getResponse = Invoke-RestMethod -Method GET -Uri $registryServiceUri -Headers $AuthHeader -ContentType "application/json" -Verbose
         }
-        catch [System.Net.WebException] {
-            Get-HTTPResponse -exception $_
+        catch {
+            $_.Exception.Response
         }
 
         if (-not $getResponse) {
