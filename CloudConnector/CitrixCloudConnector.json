@@ -6,7 +6,10 @@
       "type": "string",
       "maxLength": 13,
       "minValue": 2,
-      "description": "the name pattern that will be given to the provisionined machines"
+      "metadata": {
+        "description": "the name pattern that will be given to the provisionined machines",
+        "itemDisplayName": "Machine Name Prefix"
+      }
     },
     "vmAdminUsername": {
       "type": "string",
@@ -53,7 +56,7 @@
         "description": "subnet the Cloud Connector will get an IP address from"
       }
     },
-     "vnetResourceGroupName": {
+    "vnetResourceGroupName": {
       "type": "string",
       "metadata": {
         "description": "Resource Group that contains the existing virtual network from above"
