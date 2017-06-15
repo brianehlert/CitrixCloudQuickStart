@@ -59,7 +59,10 @@ param(
         $downloadsUri = New-Object -TypeName System.Uri -ArgumentList $downloadsBaseUri, "$customerId/connector/$connecterName"
         $downloadPath = (Join-Path -Path $downloadPath -ChildPath $connecterName)
         try {
-            Invoke-WebRequest -Uri $downloadsUri -OutFile $downloadPath
+            # Invoke-WebRequest -Uri $downloadsUri -OutFile $downloadPath
+            $webClient = New-Object System.Net.WebClient
+            $webClient.DownloadFile($downloadsUri, $downloadPath)
+            Unblock-File $downloadPath 
         }
         catch {
             Throw "Unable to download connector $_"
