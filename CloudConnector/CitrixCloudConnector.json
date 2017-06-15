@@ -22,7 +22,7 @@
         "description": "local machine administrator password"
       }
     },
-    "domainName": {
+    "domainDnsName": {
       "type": "string",
       "minLength": 4,
       "metadata": {
@@ -54,7 +54,7 @@
         "description": "subnet the Cloud Connector will get an IP address from"
       }
     },
-    "vnetResourceGroupName": {
+    "existingVnetResourceGroup": {
       "type": "string",
       "metadata": {
         "description": "Resource Group that contains the existing virtual network from above"
@@ -78,7 +78,7 @@
         "description": "Citrix Cloud API Secret"
       }
     },
-    "citrixCloudResourceLocationName": {
+    "citrixCloudResourceLocation": {
       "type": "string",
       "metadata": {
         "description": "Citrix Cloud Resource Location Name"
@@ -87,22 +87,20 @@
   },
   "variables": {
     "vmSize": "Standard_A2_v2",
-    "availabilitySetName": "[concat(parameters('citrixCloudResourceLocationName'),'-availset')]",
+    "availabilitySetName": "[concat(parameters('citrixCloudResourceLocation'),'-availset')]",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer-HUB",
     "windowsOSVersion": "2016-Datacenter-HUB",
     "OSDiskName": "[concat(parameters('vmName'),'-osdisk')]",
     "nicName": "[concat(parameters('vmName'),'-nic')]",
-    "vnetId": "[resourceId(parameters('vnetResourceGroupName'),'Microsoft.Network/virtualNetworks', parameters('existingVNETName'))]",
+    "vnetId": "[resourceId(parameters('existingVnetResourceGroup'),'Microsoft.Network/virtualNetworks', parameters('existingVNETName'))]",
     "subnetId": "[concat(variables('vnetId'),'/subnets/', parameters('existingSubnetName'))]",
     "networkSecurityGroup": "[concat(parameters('vmName'),'-nsg')]",
     "vhdStorageType": "Standard_LRS",
     "vhdStorageContainerName": "vhds",
-    "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('citrixCloudResourceLocationName'),'-',''),11), uniqueString(resourceGroup().id)))]",
-    "diagnosticsStorageAccountName": "[variables('vhdStorageAccountName')]",
-    "wadmetricsresourceid": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
+    "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('citrixCloudResourceLocation'),'-',''),11), uniqueString(resourceGroup().id)))]",
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
-    "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation ', trim(parameters('citrixCloudResourceLocationName')))]"
+    "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation ', trim(parameters('citrixCloudResourceLocation')))]"
   },
   "resources": [
     {
@@ -248,8 +246,8 @@
         "typeHandlerVersion": "1.3",
         "autoUpgradeMinorVersion": true,
         "settings": {
-          "Name": "[parameters('domainName')]",
-          "User": "[concat(parameters('domainName'), '\\', parameters('domainJoinUsername'))]",
+          "Name": "[parameters('domainDnsName')]",
+          "User": "[concat(parameters('domainDnsName'), '\\', parameters('domainJoinUsername'))]",
           "Restart": "true",
           "Options": "3"
         },
