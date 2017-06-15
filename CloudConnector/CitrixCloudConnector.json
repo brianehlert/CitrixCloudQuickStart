@@ -570,7 +570,7 @@
           "fileUris": [
             "[variables('installScriptDownloadUrl')]"
           ],
-          "commandToExecute": "[concat('powershell -ExecutionPolicy RemoteSigned -File CitrixCloudConnectorInstall.ps1 ', variables('scriptParameters'))]"
+          "commandToExecute": "[concat('powershell -ExecutionPolicy RemoteSigned -File DeployCitrixCloudConnector.ps1 ', variables('scriptParameters'))]"
         },
         "protectedSettings": {}
       },
