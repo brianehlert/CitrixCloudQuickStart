@@ -61,7 +61,7 @@ param(
         try {
             Invoke-WebRequest -Uri $downloadsUri -OutFile $downloadPath
         }
-        catch [System.Net.WebException] {
+        catch {
             Throw "Unable to download connector $_"
         }
         if (Test-Path $downloadPath) {
