@@ -3,31 +3,31 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "vmName": {
-      "value": "AZCWC04"
+      "value": ""
     },
     "vmAdminUsername": {
-      "value": "azureuser1"
+      "value": ""
     },
     "vmAdminPassword": {
-      "value": "Password1@Cloud123"
+      "value": ""
     },
     "domainName": {
-      "value": "lab.local"
+      "value": ""
     },
     "domainJoinUsername": {
-      "value": "Administrator"
+      "value": ""
     },
     "domainJoinPassword": {
-      "value": "Cloud123"
+      "value": ""
     },
     "vnetResourceGroupName": {
-      "value": "vNet1Resource Group"
+      "value": ""
     },
     "existingVNETName": {
-      "value": "vNet1"
+      "value": ""
     },
     "existingSubnetName": {
-      "value": "subNet1"
+      "value": ""
     },
     "citrixCloudAPIKey": {
       "value": ""
@@ -36,10 +36,10 @@
       "value": ""
     },
     "citrixCloudCustomerId": {
-      "value": "tttemea3"
+      "value": ""
     },
     "citrixCloudResourceLocationName": {
-      "value": "PS AzureLab"
+      "value": ""
     }
   }
 }
