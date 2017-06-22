@@ -100,7 +100,7 @@
     "vhdStorageContainerName": "vhds",
     "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('citrixCloudResourceLocation'),'-',''),11), uniqueString(resourceGroup().id)))]",
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
-    "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation ', trim(parameters('citrixCloudResourceLocation')))]"
+    "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation \"', trim(parameters('citrixCloudResourceLocation')), '\"')]"
   },
   "resources": [
     {
