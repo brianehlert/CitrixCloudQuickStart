@@ -98,7 +98,7 @@
     "networkSecurityGroup": "[concat(parameters('vmName'),'-nsg')]",
     "vhdStorageType": "Standard_LRS",
     "vhdStorageContainerName": "vhds",
-    "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('citrixCloudResourceLocation'),'-',''),11), uniqueString(resourceGroup().id)))]",
+    "vhdStorageAccountName": "[take(toLower(concat(take(trim(parameters('citrixCloudResourceLocation')),11), uniqueString(resourceGroup().id))), 24)]",
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
     "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation \"', trim(parameters('citrixCloudResourceLocation')), '\"')]"
   },
