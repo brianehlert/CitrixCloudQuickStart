@@ -87,7 +87,7 @@
   },
   "variables": {
     "vmSize": "Standard_A2_v2",
-    "availabilitySetName": "[concat(parameters('citrixCloudResourceLocation'),'-availset')]",
+    "availabilitySetName": "[concat(take(trim(replace(parameters('citrixCloudResourceLocation'),' ','')),11),'-availset')]",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer-HUB",
     "windowsOSVersion": "2016-Datacenter-HUB",
