@@ -132,7 +132,7 @@
       "properties": {
         "ipConfigurations": [
           {
-            "name": "[concat('ipconfig',copyIndex())]",
+            "name": "[concat('ipconfig', copyIndex())]",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
@@ -244,11 +244,15 @@
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(concat(parameters('vmName'), copyIndex()),'/JoinDomain')]",
+      "name": "[concat(parameters('vmName'), copyIndex(),'/JoinDomain')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('vmName'), copyIndex()))]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), copyIndex())]"
       ],
+      "copy": {
+        "name": "joinCopy",
+        "count": 2
+      },
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "JsonADDomainExtension",
@@ -267,9 +271,13 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(concat(parameters('vmName'), copyIndex()),'/customScriptExtension')]",
+            "name": "[concat(parameters('vmName'), copyIndex(),'/customScriptExtension')]",
       "apiVersion": "2016-04-30-preview",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "scriptCopy",
+        "count": 2
+      },
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "CustomScriptExtension",
@@ -285,7 +293,7 @@
       },
       "dependsOn": [
         "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('vmName'), copyIndex()))]",
-        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('vmName'), copyIndex()),'/extensions','/JoinDomain')]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), copyIndex(),'/extensions','/JoinDomain')]"
       ]
     }
   ]
