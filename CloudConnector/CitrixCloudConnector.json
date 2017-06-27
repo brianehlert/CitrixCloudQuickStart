@@ -262,7 +262,7 @@
       },
       "dependsOn": [
         "machineCopy",
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),'/extensions','/JoinDomain')]"
+        "[concat('machineCopy','/extensions','/JoinDomain')]"
       ]
     }
   ]
