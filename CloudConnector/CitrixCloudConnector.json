@@ -13,20 +13,20 @@
       "type": "string",
       "minLength": 5,
       "metadata": {
-        "description": "local machine administrator username"
+        "description": "virtual machine local administrator username"
       }
     },
     "vmAdminPassword": {
       "type": "securestring",
       "metadata": {
-        "description": "local machine administrator password"
+        "description": "virtual machine local administrator password"
       }
     },
     "domainDnsName": {
       "type": "string",
       "minLength": 4,
       "metadata": {
-        "description": "the DNS name of the domain to join"
+        "description": "the DNS name of the domain the machine will join"
       }
     },
     "domainJoinUsername": {
@@ -39,19 +39,19 @@
     "domainJoinPassword": {
       "type": "securestring",
       "metadata": {
-        "description": "domain join user password"
+        "description": "password of the domain join user"
       }
     },
     "existingVNETName": {
       "type": "string",
       "metadata": {
-        "description": "virtual network the the Cloud Connector will be attached to"
+        "description": "virtual network the the Cloud Connector machine will be attached to"
       }
     },
     "existingSubnetName": {
       "type": "string",
       "metadata": {
-        "description": "subnet the Cloud Connector will get an IP address from"
+        "description": "subnet the Cloud Connector machine will get an IP address from"
       }
     },
     "existingVnetResourceGroup": {
