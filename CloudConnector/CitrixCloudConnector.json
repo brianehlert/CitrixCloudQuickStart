@@ -88,6 +88,7 @@
   "variables": {
     "vmSize": "Standard_A2_v2",
     "availabilitySetName": "[concat(take(trim(replace(parameters('vmName'),' ','')),11),'-availset')]",
+    "instanceCount": 2,
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer-HUB",
     "windowsOSVersion": "2016-Datacenter-HUB",
@@ -108,7 +109,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "machineCopy",
-        "count": 2
+        "count": "[variables('instanceCount')]"
       },
       "dependsOn": [
         "nicCopy",
@@ -161,7 +162,7 @@
       "location": "[resourceGroup().location]",
       "copy": {
         "name": "nicCopy",
-        "count": 2
+        "count": "[variables('instanceCount')]"
       },
       "properties": {
         "ipConfigurations": [
@@ -221,8 +222,12 @@
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'), '/JoinDomain')]",
+      "name": "[concat(parameters('vmName'), copyIndex(), '/JoinDomain')]",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "joinCopy",
+        "count": "[variables('instanceCount')]"
+      },
       "dependsOn": [
         "machineCopy"
       ],
@@ -262,7 +267,7 @@
       },
       "dependsOn": [
         "machineCopy",
-        "[concat('machineCopy','/extensions','/JoinDomain')]"
+        "joinCopy"
       ]
     }
   ]
