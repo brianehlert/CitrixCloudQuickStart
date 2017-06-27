@@ -7,6 +7,8 @@ Required information from Citrix Cloud is: the Citrix Cloud customer ID, Citrix 
 The virtual network and subnet need to exist in the target Azure subscription.
 Active Directory is required and must be defined as the DNS source for the virtual network.  Windows Server Active Directory or Azure AD Directory Services can be used to meet this requirement.
 
+Be sure that you DO NOT select any resource group where you will be provisioning XenApp or XenDesktop worker / session machines.  Cloud Connectors are part of your infrastrucutre and should be in different Resource Group from your worker / session machines.
+
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbrianehlert%2FCitrixCloudQuickStart%2Fmaster%2FCloudConnector%2FCitrixCloudConnector.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png" alt="Azure Public"/>
 </a>
