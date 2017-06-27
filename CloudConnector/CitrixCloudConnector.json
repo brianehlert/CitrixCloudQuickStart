@@ -91,44 +91,76 @@
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer-HUB",
     "windowsOSVersion": "2016-Datacenter-HUB",
-    "OSDiskName": "[concat(parameters('vmName'),'-osdisk')]",
     "nicName": "[concat(parameters('vmName'),'-nic')]",
     "vnetId": "[resourceId(parameters('existingVnetResourceGroup'),'Microsoft.Network/virtualNetworks', parameters('existingVNETName'))]",
     "subnetId": "[concat(variables('vnetId'),'/subnets/', parameters('existingSubnetName'))]",
     "networkSecurityGroup": "[concat(parameters('vmName'),'-nsg')]",
-    "vhdStorageType": "Standard_LRS",
-    "vhdStorageContainerName": "vhds",
-    "vhdStorageAccountName": "[take(toLower(concat(take(trim(replace(replace(parameters('citrixCloudResourceLocation'),' ',''),'-','')),11), uniqueString(resourceGroup().id))), 24)]",
+    "availabilitySetPlatformUpdateDomainCount": 5,
+    "availabilitySetPlatformFaultDomainCount": 3,
     "installScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
     "citrixResourceLocation": "[concat('\"', trim(parameters('citrixCloudResourceLocation')), '\"')]",
     "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation ', variables('citrixResourceLocation'))]"
   },
   "resources": [
+        {
+            "name": "[parameters('vmName')]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2016-04-30-preview",
+            "location": "[resourceGroup().location]",
+            "dependsOn": [
+                "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
+                "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+            ],
+            "properties": {
+                "osProfile": {
+                    "computerName": "[parameters('vmName')]",
+                    "adminUsername": "[parameters('vmAdminUsername')]",
+                    "adminPassword": "[parameters('vmAdminPassword')]",
+                    "windowsConfiguration": {
+                        "provisionVmAgent": "true"
+                    }
+                },
+                "hardwareProfile": {
+                    "vmSize": "[variables('vmSize')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                      "publisher": "[variables('imagePublisher')]",
+                      "offer": "[variables('imageOffer')]",
+                      "sku": "[variables('windowsOSVersion')]",
+                      "version": "latest"
+                    },
+                    "osDisk": {
+                        "createOption": "FromImage",
+                        "managedDisk": {
+                            "storageAccountType": "Standard_LRS"
+                        }
+                    },
+                    "dataDisks": []
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
+                        }
+                    ]
+                },
+                "licenseType": "Windows_Server",
+                "availabilitySet": {
+                    "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
+                }
+            }
+        },
+
     {
-      "type": "Microsoft.Storage/storageAccounts",
-      "name": "[variables('vhdStorageAccountName')]",
-      "apiVersion": "2016-01-01",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "StorageAccount"
-      },
-      "sku": {
-        "name": "[variables('vhdStorageType')]"
-      },
-      "kind": "Storage"
-    },
-    {
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
       "name": "[variables('nicName')]",
       "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "NetworkInterface"
-      },
       "properties": {
         "ipConfigurations": [
           {
-            "name": "ipconfig",
+            "name": "ipconfig1",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
@@ -170,68 +202,15 @@
       "dependsOn": []
     },
     {
-      "apiVersion": "2016-04-30-preview",
-      "type": "Microsoft.Compute/availabilitySets",
-      "name": "[variables('availabilitySetName')]",
-      "location": "[resourceGroup().location]",
-      "properties": {
-        "platformUpdateDomainCount": 5,
-        "platformFaultDomainCount": 3,
-        "virtualMachines": [
-          {
-            "id": "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-          }
-        ]
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
-      ]
-    },
-    {
-      "apiVersion": "2015-06-15",
-      "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('vmName')]",
-      "location": "[resourceGroup().location]",
-      "tags": {
-        "displayName": "VirtualMachine"
-      },
-      "dependsOn": [
-        "[resourceId('Microsoft.Storage/storageAccounts/', variables('vhdStorageAccountName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
-      ],
-      "properties": {
-        "hardwareProfile": {
-          "vmSize": "[variables('vmSize')]"
-        },
-        "osProfile": {
-          "computerName": "[parameters('vmName')]",
-          "adminUsername": "[parameters('vmAdminUsername')]",
-          "adminPassword": "[parameters('vmAdminPassword')]"
-        },
-        "storageProfile": {
-          "imageReference": {
-            "publisher": "[variables('imagePublisher')]",
-            "offer": "[variables('imageOffer')]",
-            "sku": "[variables('windowsOSVersion')]",
-            "version": "latest"
-          },
-          "osDisk": {
-            "name": "osdisk",
-            "vhd": {
-              "uri": "[concat(reference(resourceId('Microsoft.Storage/storageAccounts', variables('vhdStorageAccountName')), '2016-01-01').primaryEndpoints.blob, variables('vhdStorageContainerName'), '/', variables('OSDiskName'), '.vhd')]"
-            },
-            "caching": "ReadWrite",
-            "createOption": "FromImage"
-          }
-        },
-        "networkProfile": {
-          "networkInterfaces": [
-            {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
-            }
-          ]
+        "name": "[variables('availabilitySetName')]",
+        "type": "Microsoft.Compute/availabilitySets",
+        "apiVersion": "2016-04-30-preview",
+        "location": "[resourceGroup().location]",
+        "properties": {
+            "platformFaultDomainCount": "[variables('availabilitySetPlatformFaultDomainCount')]",
+            "platformUpdateDomainCount": "[variables('availabilitySetPlatformUpdateDomainCount')]",
+            "managed": true
         }
-      }
     },
     {
       "apiVersion": "2016-03-30",
