@@ -101,65 +101,68 @@
     "scriptParameters": "[concat(' -CustomerId ', trim(parameters('citrixCloudCustomerId')), ' -APIClientID ', trim(parameters('citrixCloudAPIKey')), ' -APIClientSecret ', trim(parameters('citrixCloudAPISecret')), ' -ResourceLocation ', variables('citrixResourceLocation'))]"
   },
   "resources": [
-        {
-            "name": "[concat(parameters('vmName'), copyIndex())]",
-            "type": "Microsoft.Compute/virtualMachines",
-            "apiVersion": "2016-04-30-preview",
-            "location": "[resourceGroup().location]",
-            "copy":{
-              "name": "machineCopy",
-              "count": 2
-            },
-            "dependsOn": [
-                "[concat('Microsoft.Network/networkInterfaces/', concat(parameters('vmName'),'-nic'))]",
-                "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
-            ],
-            "properties": {
-                "osProfile": {
-                    "computerName": "[parameters('vmName')]",
-                    "adminUsername": "[parameters('vmAdminUsername')]",
-                    "adminPassword": "[parameters('vmAdminPassword')]",
-                    "windowsConfiguration": {
-                        "provisionVmAgent": "true"
-                    }
-                },
-                "hardwareProfile": {
-                    "vmSize": "[variables('vmSize')]"
-                },
-                "storageProfile": {
-                    "imageReference": {
-                      "publisher": "[variables('imagePublisher')]",
-                      "offer": "[variables('imageOffer')]",
-                      "sku": "[variables('windowsOSVersion')]",
-                      "version": "latest"
-                    },
-                    "osDisk": {
-                        "createOption": "FromImage",
-                        "managedDisk": {
-                            "storageAccountType": "Standard_LRS"
-                        }
-                    },
-                    "dataDisks": []
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmName'),'-nic'))]"
-                        }
-                    ]
-                },
-                "licenseType": "Windows_Server",
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
-                }
-            }
+    {
+      "name": "[concat(parameters('vmName'), copyIndex())]",
+      "type": "Microsoft.Compute/virtualMachines",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "machineCopy",
+        "count": 2
+      },
+      "dependsOn": [
+        "nicCopy",
+        "[concat('Microsoft.Compute/availabilitySets/', variables('availabilitySetName'))]"
+      ],
+      "properties": {
+        "osProfile": {
+          "computerName": "[parameters('vmName')]",
+          "adminUsername": "[parameters('vmAdminUsername')]",
+          "adminPassword": "[parameters('vmAdminPassword')]",
+          "windowsConfiguration": {
+            "provisionVmAgent": "true"
+          }
         },
-
+        "hardwareProfile": {
+          "vmSize": "[variables('vmSize')]"
+        },
+        "storageProfile": {
+          "imageReference": {
+            "publisher": "[variables('imagePublisher')]",
+            "offer": "[variables('imageOffer')]",
+            "sku": "[variables('windowsOSVersion')]",
+            "version": "latest"
+          },
+          "osDisk": {
+            "createOption": "FromImage",
+            "managedDisk": {
+              "storageAccountType": "Standard_LRS"
+            }
+          },
+          "dataDisks": []
+        },
+        "networkProfile": {
+          "networkInterfaces": [
+            {
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(parameters('vmName'), copyIndex(), '-nic'))]"
+            }
+          ]
+        },
+        "licenseType": "Windows_Server",
+        "availabilitySet": {
+          "id": "[resourceId('Microsoft.Compute/availabilitySets', variables('availabilitySetName'))]"
+        }
+      }
+    },
     {
       "apiVersion": "2016-09-01",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(parameters('vmName'),'-nic')]",
+      "name": "[concat(parameters('vmName'), copyIndex(), '-nic')]",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "nicCopy",
+        "count": 2
+      },
       "properties": {
         "ipConfigurations": [
           {
@@ -205,22 +208,24 @@
       "dependsOn": []
     },
     {
-        "name": "[variables('availabilitySetName')]",
-        "type": "Microsoft.Compute/availabilitySets",
-        "apiVersion": "2016-04-30-preview",
-        "location": "[resourceGroup().location]",
-        "properties": {
-            "platformFaultDomainCount": "[variables('availabilitySetPlatformFaultDomainCount')]",
-            "platformUpdateDomainCount": "[variables('availabilitySetPlatformUpdateDomainCount')]",
-            "managed": true
-        }
+      "name": "[variables('availabilitySetName')]",
+      "type": "Microsoft.Compute/availabilitySets",
+      "apiVersion": "2016-04-30-preview",
+      "location": "[resourceGroup().location]",
+      "properties": {
+        "platformFaultDomainCount": "[variables('availabilitySetPlatformFaultDomainCount')]",
+        "platformUpdateDomainCount": "[variables('availabilitySetPlatformUpdateDomainCount')]",
+        "managed": true
+      }
     },
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'), '/JoinDomain')]",
       "location": "[resourceGroup().location]",
-      "dependsOn": ["machineCopy"],
+      "dependsOn": [
+        "machineCopy"
+      ],
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "JsonADDomainExtension",
