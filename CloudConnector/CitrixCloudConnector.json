@@ -194,7 +194,7 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[parameters('vmName')]",
+      "name": "[concat(parameters('vmName'), copyIndex())]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "VirtualMachine"
@@ -244,10 +244,10 @@
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/JoinDomain')]",
+      "name": "[concat(concat(parameters('vmName'), copyIndex()),'/JoinDomain')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('vmName'), copyIndex()))]"
       ],
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -267,7 +267,7 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'),'/customScriptExtension')]",
+            "name": "[concat(concat(parameters('vmName'), copyIndex()),'/customScriptExtension')]",
       "apiVersion": "2016-04-30-preview",
       "location": "[resourceGroup().location]",
       "properties": {
@@ -284,8 +284,8 @@
         "protectedSettings": {}
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),'/extensions','/JoinDomain')]"
+        "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('vmName'), copyIndex()))]",
+        "[concat('Microsoft.Compute/virtualMachines/', concat(parameters('vmName'), copyIndex()),'/extensions','/JoinDomain')]"
       ]
     }
   ]
