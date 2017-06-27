@@ -120,19 +120,15 @@
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Network/networkInterfaces",
-      "name": "[concat(variables('nicName'), copyIndex())]",
+      "name": "[variables('nicName')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "NetworkInterface"
       },
-      "copy": {
-        "name": "nicCopy",
-        "count": 2
-      },
       "properties": {
         "ipConfigurations": [
           {
-            "name": "[concat('ipconfig', copyIndex())]",
+            "name": "ipconfig",
             "properties": {
               "privateIPAllocationMethod": "Dynamic",
               "subnet": {
@@ -194,25 +190,21 @@
     {
       "apiVersion": "2015-06-15",
       "type": "Microsoft.Compute/virtualMachines",
-      "name": "[concat(parameters('vmName'), copyIndex())]",
+      "name": "[parameters('vmName')]",
       "location": "[resourceGroup().location]",
       "tags": {
         "displayName": "VirtualMachine"
       },
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts/', variables('vhdStorageAccountName'))]",
-        "[resourceId('Microsoft.Network/networkInterfaces/', concat(variables('nicName'), copyIndex()))]"
+        "[resourceId('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
       ],
-      "copy": {
-        "name": "vmCopy",
-        "count": 2
-      },
       "properties": {
         "hardwareProfile": {
           "vmSize": "[variables('vmSize')]"
         },
         "osProfile": {
-          "computerName": "[concat(parameters('vmName'), copyIndex())]",
+          "computerName": "[parameters('vmName')]",
           "adminUsername": "[parameters('vmAdminUsername')]",
           "adminPassword": "[parameters('vmAdminPassword')]"
         },
@@ -235,7 +227,7 @@
         "networkProfile": {
           "networkInterfaces": [
             {
-              "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('nicName'), copyIndex()))]"
+              "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('nicName'))]"
             }
           ]
         }
@@ -244,15 +236,11 @@
     {
       "apiVersion": "2016-03-30",
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'), copyIndex(),'/JoinDomain')]",
+      "name": "[concat(parameters('vmName'), '/JoinDomain')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), copyIndex())]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
       ],
-      "copy": {
-        "name": "joinCopy",
-        "count": 2
-      },
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "JsonADDomainExtension",
@@ -271,13 +259,9 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('vmName'), copyIndex(),'/customScriptExtension')]",
+            "name": "[concat(parameters('vmName'), '/customScriptExtension')]",
       "apiVersion": "2016-04-30-preview",
       "location": "[resourceGroup().location]",
-      "copy": {
-        "name": "scriptCopy",
-        "count": 2
-      },
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "CustomScriptExtension",
@@ -292,8 +276,8 @@
         "protectedSettings": {}
       },
       "dependsOn": [
-        "[resourceId('Microsoft.Compute/virtualMachines', concat(parameters('vmName'), copyIndex()))]",
-        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'), copyIndex(),'/extensions','/JoinDomain')]"
+        "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]",
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'),'/extensions','/JoinDomain')]"
       ]
     }
   ]
