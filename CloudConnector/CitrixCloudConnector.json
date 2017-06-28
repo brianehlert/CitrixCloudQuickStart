@@ -249,9 +249,13 @@
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
-      "name": "[concat(parameters('vmName'), '/customScriptExtension')]",
+      "name": "[concat(parameters('vmName'), copyIndex(), '/customScriptExtension')]",
       "apiVersion": "2016-04-30-preview",
       "location": "[resourceGroup().location]",
+      "copy": {
+        "name": "scriptCopy",
+        "count": "[variables('instanceCount')]"
+      },
       "properties": {
         "publisher": "Microsoft.Compute",
         "type": "CustomScriptExtension",
