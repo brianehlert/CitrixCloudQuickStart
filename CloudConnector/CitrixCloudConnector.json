@@ -117,7 +117,7 @@
       ],
       "properties": {
         "osProfile": {
-          "computerName": "[parameters('vmName')]",
+          "computerName": "[concat(parameters('vmName'), copyIndex())]",
           "adminUsername": "[parameters('vmAdminUsername')]",
           "adminPassword": "[parameters('vmAdminPassword')]",
           "windowsConfiguration": {
