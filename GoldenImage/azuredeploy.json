@@ -26,13 +26,10 @@
         "adminPassword": {
             "type": "securestring"
         },
-        "availabilitySetName": {
+        "storageAccountName": {
             "type": "string"
         },
-        "availabilitySetPlatformFaultDomainCount": {
-            "type": "string"
-        },
-        "availabilitySetPlatformUpdateDomainCount": {
+        "storageAccountType": {
             "type": "string"
         },
         "subnetName": {
@@ -57,7 +54,7 @@
             "location": "[parameters('location')]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', parameters('networkInterfaceName'))]",
-                "[concat('Microsoft.Compute/availabilitySets/', parameters('availabilitySetName'))]"
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('storageAccountName'))]"
             ],
             "properties": {
                 "osProfile": {
@@ -74,15 +71,16 @@
                 "storageProfile": {
                     "imageReference": {
                         "publisher": "MicrosoftWindowsServer",
-                        "offer": "WindowsServer-HUB",
-                        "sku": "2016-Datacenter-HUB",
+                        "offer": "WindowsServer",
+                        "sku": "2016-Datacenter",
                         "version": "latest"
                     },
                     "osDisk": {
                         "createOption": "fromImage",
-                        "managedDisk": {
-                            "storageAccountType": "Standard_LRS"
-                        }
+                        "vhd": {
+                            "uri": "[concat(concat(reference(resourceId('Golden', 'Microsoft.Storage/storageAccounts', parameters('storageAccountName')), '2015-06-15').primaryEndpoints['blob'], 'vhds/'), parameters('virtualMachineName'), '20170629140143.vhd')]"
+                        },
+                        "name": "[parameters('virtualMachineName')]"
                     },
                     "dataDisks": []
                 },
@@ -93,49 +91,16 @@
                         }
                     ]
                 },
-                "licenseType": "Windows_Server",
-                "availabilitySet": {
-                    "id": "[resourceId('Microsoft.Compute/availabilitySets', parameters('availabilitySetName'))]"
-                }
+                "licenseType": "Windows_Server"
             }
         },
         {
-            "name": "Microsoft.CustomScriptExtension-20170614101841",
-            "apiVersion": "2015-01-01",
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "incremental",
-                "templateLink": {
-                    "uri": "https://gallery.azure.com/artifact/20161101/Microsoft.CustomScriptExtension-arm.2.0.50/Artifacts/MainTemplate.json"
-                },
-                "parameters": {
-                    "vmName": {
-                        "value": "be-vmName"
-                    },
-                    "location": {
-                        "value": "westus"
-                    },
-                    "fileUris": {
-                        "value": "https://iaasv2tempstoragesn.blob.core.windows.net/vmextensionstemporary-00034001c82a0996-20170614171759201/DeployCitrixCloudConnector.ps1?sv=2015-04-05&sr=c&sig=bc9Irm64ih8A%2FJ%2FMjW4E4B5xITpB4%2FgxhXJGa%2FDZU7Q%3D&se=2017-06-15T17%3A17%3A59Z&sp=rw"
-                    },
-                    "arguments": {
-                        "value": "param1 param2 \"param three\""
-                    }
-                }
-            },
-            "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('virtualMachineName'))]"
-            ]
-        },
-        {
-            "name": "[parameters('availabilitySetName')]",
-            "type": "Microsoft.Compute/availabilitySets",
-            "apiVersion": "2016-04-30-preview",
+            "name": "[parameters('storageAccountName')]",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2015-06-15",
             "location": "[parameters('location')]",
             "properties": {
-                "platformFaultDomainCount": "[parameters('availabilitySetPlatformFaultDomainCount')]",
-                "platformUpdateDomainCount": "[parameters('availabilitySetPlatformUpdateDomainCount')]",
-                "managed": true
+                "accountType": "[parameters('storageAccountType')]"
             }
         },
         {
@@ -157,13 +122,13 @@
                             },
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIpAddress": {
-                                "id": "[resourceId('be-tata','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
+                                "id": "[resourceId('Golden','Microsoft.Network/publicIpAddresses', parameters('publicIpAddressName'))]"
                             }
                         }
                     }
                 ],
                 "networkSecurityGroup": {
-                    "id": "[resourceId('be-tata', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
+                    "id": "[resourceId('Golden', 'Microsoft.Network/networkSecurityGroups', parameters('networkSecurityGroupName'))]"
                 }
             }
         },
