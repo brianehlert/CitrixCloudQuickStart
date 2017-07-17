@@ -8,6 +8,8 @@ You still have to download and install the VDA (Virtual Delivery Agent) but this
 The virtual network and subnet need to exist in the target Azure subscription.
 Active Directory is required and must be defined as the DNS source for the virtual network.  Windows Server Active Directory or Azure AD Directory Services can be used to meet this requirement.
 
+This defaults to using the Hybrid Use Benefit licensing.  Be sure to have the proper agreements in place to support that. It is your responsibility.
+
 Be sure that you DO NOT select any resource group where you will be provisioning XenApp or XenDesktop worker / session machines.  You Golden / Master images are special and should be in different Resource Groups from your worker / session machines.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fbrianehlert%2FCitrixCloudQuickStart%2Fmaster%2FServerGoldenImage%2Fazuredeploy.json" target="_blank">

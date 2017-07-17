@@ -11,10 +11,10 @@
         },
         "windowsOSVersion": {
             "type": "string",
-            "defaultValue": "2016-Datacenter",
+            "defaultValue": "2016-Datacenter-HUB",
             "allowedValues": [
-                "2012-R2-Datacenter",
-                "2016-Datacenter"
+                "2012-R2-Datacenter-HUB",
+                "2016-Datacenter-HUB"
             ],
             "metadata": {
                 "description": "The Windows version for the VM. This will pick the latest maintained image of this given Windows version."
@@ -74,7 +74,7 @@
     "variables": {
         "vmSize": "Standard_A2_v2",
         "imagePublisher": "MicrosoftWindowsServer",
-        "imageOffer": "WindowsServer",
+        "imageOffer": "WindowsServer-HUB",
         "vnetId": "[resourceId(parameters('existingVnetResourceGroup'),'Microsoft.Network/virtualNetworks', parameters('existingVNETName'))]",
         "subnetId": "[concat(variables('vnetId'),'/subnets/', parameters('existingSubnetName'))]",
         "networkSecurityGroup": "[concat(parameters('vmName'),'-nsg')]",
@@ -93,8 +93,7 @@
             "location": "[resourceGroup().location]",
             "dependsOn": [
                 "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]",
-                "[concat('Microsoft.Storage/storageAccounts/', variables('vhdStorageAccountName'))]",
-                "Microsoft.Resources/deployments/GoldenVM"
+                "[concat('Microsoft.Storage/storageAccounts/', variables('vhdStorageAccountName'))]"
             ],
             "properties": {
                 "osProfile": {
