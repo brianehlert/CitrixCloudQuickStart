@@ -135,8 +135,7 @@
         {
             "name": "[variables('vhdStorageAccountName')]",
             "type": "Microsoft.Storage/storageAccounts",
-            "dependsOn": [
-            ],
+            "dependsOn": [],
             "apiVersion": "2015-06-15",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -177,8 +176,7 @@
             "type": "Microsoft.Network/publicIpAddresses",
             "apiVersion": "2016-08-01",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-            ],
+            "dependsOn": [],
             "properties": {
                 "publicIpAllocationMethod": "Dynamic"
             }
@@ -188,9 +186,7 @@
             "type": "Microsoft.Network/networkSecurityGroups",
             "apiVersion": "2016-09-01",
             "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "Microsoft.Resources/deployments/GoldenVM"
-            ],
+            "dependsOn": [],
             "properties": {
                 "securityRules": [
                     {
