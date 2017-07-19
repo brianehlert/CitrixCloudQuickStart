@@ -83,7 +83,7 @@
         "vhdStorageType": "Standard_LRS",
         "vhdStorageContainerName": "vhds",
         "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('vmName'),'-',''),11), 'storage'))]",
-        "workplaceJoinScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
+        "workplaceJoinScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/ClientGoldenImage/scripts/Set-autoWorkplaceJoin.ps1",
     },
     "resources": [
         {
