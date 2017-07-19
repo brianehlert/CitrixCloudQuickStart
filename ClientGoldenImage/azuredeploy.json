@@ -82,7 +82,8 @@
         "nicName": "[concat(parameters('vmName'),'-nic')]",
         "vhdStorageType": "Standard_LRS",
         "vhdStorageContainerName": "vhds",
-        "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('vmName'),'-',''),11), 'storage'))]"
+        "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('vmName'),'-',''),11), 'storage'))]",
+        "workplaceJoinScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/CloudConnector/scripts/DeployCitrixCloudConnector.ps1",
     },
     "resources": [
         {
@@ -206,12 +207,33 @@
             }
         },
         {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('vmName'), copyIndex(), '/customScriptExtension')]",
+            "apiVersion": "2016-04-30-preview",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "publisher": "Microsoft.Compute",
+                "type": "CustomScriptExtension",
+                "typeHandlerVersion": "1.8",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[variables('workplaceJoinScriptDownloadUrl')]"
+                    ],
+                    "commandToExecute": "powershell.exe -ExecutionPolicy RemoteSigned -File Set-autoWorkplaceJoin.ps1"
+                },
+                "protectedSettings": {}
+            },
+            "dependsOn": []
+        },
+        {
             "apiVersion": "2016-03-30",
             "type": "Microsoft.Compute/virtualMachines/extensions",
             "name": "[concat(parameters('vmName'), '/JoinDomain')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]",
+                "[concat(parameters('vmName'), copyIndex(), '/customScriptExtension')]"
             ],
             "properties": {
                 "publisher": "Microsoft.Compute",
