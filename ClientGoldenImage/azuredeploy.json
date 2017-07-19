@@ -208,7 +208,7 @@
         },
         {
             "type": "Microsoft.Compute/virtualMachines/extensions",
-            "name": "[concat(parameters('vmName'), copyIndex(), '/customScriptExtension')]",
+            "name": "[concat(parameters('vmName'), '/customScriptExtension')]",
             "apiVersion": "2016-04-30-preview",
             "location": "[resourceGroup().location]",
             "properties": {
@@ -224,7 +224,9 @@
                 },
                 "protectedSettings": {}
             },
-            "dependsOn": []
+            "dependsOn": [
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+            ]
         },
         {
             "apiVersion": "2016-03-30",
@@ -232,8 +234,7 @@
             "name": "[concat(parameters('vmName'), '/JoinDomain')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]",
-                "[concat(parameters('vmName'), copyIndex(), '/customScriptExtension')]"
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
             ],
             "properties": {
                 "publisher": "Microsoft.Compute",
