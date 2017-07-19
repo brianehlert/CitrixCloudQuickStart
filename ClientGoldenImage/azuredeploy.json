@@ -83,7 +83,7 @@
         "vhdStorageType": "Standard_LRS",
         "vhdStorageContainerName": "vhds",
         "vhdStorageAccountName": "[toLower(concat(take(replace(parameters('vmName'),'-',''),11), 'storage'))]",
-        "workplaceJoinScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/ClientGoldenImage/scripts/Set-autoWorkplaceJoin.ps1",
+        "workplaceJoinScriptDownloadUrl": "https://raw.githubusercontent.com/brianehlert/CitrixCloudQuickStart/master/ClientGoldenImage/Scripts/Set-autoWorkplaceJoin.ps1"
     },
     "resources": [
         {
@@ -234,9 +234,8 @@
             "name": "[concat(parameters('vmName'), '/JoinDomain')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]",
-                "[concat('Microsoft.Compute/virtualMachines/extensions/', parameters('vmName'), '/customScriptExtension')]"
-            ],
+                "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+                        ],
             "properties": {
                 "publisher": "Microsoft.Compute",
                 "type": "JsonADDomainExtension",
