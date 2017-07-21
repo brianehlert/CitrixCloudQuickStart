@@ -234,7 +234,7 @@
             "name": "[concat(parameters('vmName'), '/JoinDomain')]",
             "location": "[resourceGroup().location]",
             "dependsOn": [
-                "[concat(parameters('vmName'), '/customScriptExtension')]"
+                "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), '/customScriptExtension')]"
             ],
             "properties": {
                 "publisher": "Microsoft.Compute",
