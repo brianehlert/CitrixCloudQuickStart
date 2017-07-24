@@ -2,28 +2,28 @@
   "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vnetName": {
-      "value": "CitrixCloud"
+    "citrixCloudVnetName": {
+      "value": "citrix-cloud"
     },
-    "vnetAddressPrefix": {
+    "citrixCloudVnetIpAddresses": {
       "value": "172.16.0.0/16"
     },
-    "subnet1Name": {
+    "infrastructureSubnetName": {
       "value": "infrastructure"
     },
-    "subnet1Prefix": {
+    "infrastructureSubnetIpRange": {
       "value": "172.16.0.0/24"
     },
-    "subnet2Name": {
+    "sessionWorkerSubnetName": {
       "value": "session"
     },
-    "subnet2Prefix": {
+    "sessionWorkerSubnetIpRange": {
       "value": "172.16.1.0/24"
     },
-    "subnet3Name": {
+    "desktopWorkerSubnetName": {
       "value": "desktop"
     },
-    "subnet3Prefix": {
+    "desktopWorkerSubnetIpRange": {
       "value": "172.16.3.0/24"
     }
   }

@@ -2,60 +2,60 @@
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0",
   "parameters": {
-    "vnetName": {
+    "citrixCloudVnetName": {
       "type": "string",
-      "defaultValue": "CitrixCloud",
+      "defaultValue": "citrix-cloud",
       "metadata": {
         "description": "Citrix Cloud virtual network name"
       }
     },
-    "vnetAddressPrefix": {
+    "citrixCloudVnetIpAddresses": {
       "type": "string",
       "defaultValue": "172.16.0.0/16",
       "metadata": {
         "description": "Citrix Cloud virtual network address prefix.  All subnets must be segments within this IP range."
       }
     },
-    "subnet1Prefix": {
-      "type": "string",
-      "defaultValue": "172.16.0.0/24",
-      "metadata": {
-        "description": "Citrix Cloud infrastructure machine subnet prefix"
-      }
-    },
-    "subnet1Name": {
+    "infrastructureSubnetName": {
       "type": "string",
       "defaultValue": "infrastructure",
       "metadata": {
         "description": "Citrix Cloud infrastructure machine subnet name"
       }
     },
-    "subnet2Prefix": {
+    "infrastructureSubnetIpRange": {
       "type": "string",
-      "defaultValue": "172.16.1.0/24",
+      "defaultValue": "172.16.0.0/24",
       "metadata": {
-        "description": "session worker machine subnet prefix"
+        "description": "Citrix Cloud infrastructure machine subnet prefix"
       }
     },
-    "subnet2Name": {
+    "sessionWorkerSubnetName": {
       "type": "string",
       "defaultValue": "session",
       "metadata": {
         "description": "session worker machine subnet name"
       }
     },
-    "subnet3Prefix": {
+    "sessionWorkerSubnetIpRange": {
       "type": "string",
-      "defaultValue": "172.16.3.0/24",
+      "defaultValue": "172.16.1.0/24",
       "metadata": {
-        "description": "Desktop worker machine subnet Prefix"
+        "description": "session worker machine subnet prefix"
       }
     },
-    "subnet3Name": {
+    "desktopWorkerSubnetName": {
       "type": "string",
       "defaultValue": "desktop",
       "metadata": {
         "description": "Desktop worker machine subnet name"
+      }
+    },
+    "desktopWorkerSubnetIpRange": {
+      "type": "string",
+      "defaultValue": "172.16.3.0/24",
+      "metadata": {
+        "description": "Desktop worker machine subnet Prefix"
       }
     }
   },
@@ -66,31 +66,31 @@
     {
       "apiVersion": "[variables('apiVersion')]",
       "type": "Microsoft.Network/virtualNetworks",
-      "name": "[parameters('vnetName')]",
+      "name": "[parameters('citrixCloudVnetName')]",
       "location": "[resourceGroup().location]",
       "properties": {
         "addressSpace": {
           "addressPrefixes": [
-            "[parameters('vnetAddressPrefix')]"
+            "[parameters('citrixCloudVnetIpAddresses')]"
           ]
         },
         "subnets": [
           {
-            "name": "[parameters('subnet1Name')]",
+            "name": "[parameters('infrastructureSubnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnet1Prefix')]"
+              "addressPrefix": "[parameters('infrastructureSubnetIpRange')]"
             }
           },
           {
-            "name": "[parameters('subnet2Name')]",
+            "name": "[parameters('sessionWorkerSubnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnet2Prefix')]"
+              "addressPrefix": "[parameters('sessionWorkerSubnetIpRange')]"
             }
           },
           {
-            "name": "[parameters('subnet3Name')]",
+            "name": "[parameters('desktopWorkerSubnetName')]",
             "properties": {
-              "addressPrefix": "[parameters('subnet3Prefix')]"
+              "addressPrefix": "[parameters('desktopWorkerSubnetIpRange')]"
             }
           }
         ]
