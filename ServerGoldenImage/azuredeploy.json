@@ -55,7 +55,7 @@
         "existingVNETName": {
             "type": "string",
             "metadata": {
-                "description": "virtual network taht the golden image machine will be attached to"
+                "description": "virtual network that the golden image machine will be attached to"
             }
         },
         "existingSubnetName": {
@@ -67,7 +67,7 @@
         "existingVnetResourceGroup": {
             "type": "string",
             "metadata": {
-                "description": "Resource Group that contains the existing virtual network from above"
+                "description": "Resource Group that contains the existing virtual network referenced above"
             }
         }
     },
