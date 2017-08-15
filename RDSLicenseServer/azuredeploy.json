@@ -201,7 +201,7 @@
           "Password": "[parameters('domainJoinPassword')]"
         },
         "dependsOn": [
-          "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
+          "[resourceId('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
         ]
       }
     },
