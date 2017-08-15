@@ -201,7 +201,7 @@
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'), '/customScriptExtension')]",
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2016-03-30" ,
       "location": "[resourceGroup().location]",
       "properties": {
         "publisher": "Microsoft.Compute",
@@ -215,7 +215,7 @@
         "protectedSettings": {}
       },
       "dependsOn": [
-        "[concat(parameters('vmName'), '/JoinDomain')]"
+        "[resourceId('Microsoft.Compute/virtualMachines/extensions', parameters('vmName'), 'JoinDomain')]"
       ]
     }
   ]
