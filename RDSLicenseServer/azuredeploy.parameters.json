@@ -28,18 +28,6 @@
     },
     "existingSubnetName": {
       "value": ""
-    },
-    "citrixCloudAPIKey": {
-      "value": ""
-    },
-    "citrixCloudAPISecret": {
-      "value": ""
-    },
-    "citrixCloudCustomerId": {
-      "value": ""
-    },
-    "citrixCloudResourceLocationName": {
-      "value": ""
     }
   }
 }
