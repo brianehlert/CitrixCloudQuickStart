@@ -3,6 +3,9 @@ Deploy an RDS License Server to an existing Domain
 This template is in prototype.  If it is useful to you, that is excellent.  If it does not meet your scenarios, help us make it better or submit an issue.
 
 This template is designed to provision an RDS License Server.
+Following creation of the RDS License Server you will need to logon as a domain user, activate the license server, and install licenses.
+https://docs.microsoft.com/en-us/windows-server/remote/remote-desktop-services/rds-activate-license-server
+https://docs.microsoft.com/en-us/windows-server/remote/remote-desktop-services/rds-install-cals
 
 The virtual network and subnet need to exist in the target Azure subscription.
 Active Directory is required and must be defined as the DNS source for the virtual network.  Windows Server Active Directory or Azure AD Directory Services can be used to meet this requirement.
