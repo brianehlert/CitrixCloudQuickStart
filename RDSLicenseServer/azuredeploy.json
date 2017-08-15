@@ -187,7 +187,7 @@
       "name": "[concat(parameters('vmName'), '/JoinDomain')]",
       "location": "[resourceGroup().location]",
       "dependsOn": [
-        "[concat('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+        "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
       ],
     "properties": {
         "publisher": "Microsoft.Compute",
