@@ -76,7 +76,7 @@
     {
       "name": "[parameters('vmName')]",
       "type": "Microsoft.Compute/virtualMachines",
-      "apiVersion": "2016-04-30-preview",
+      "apiVersion": "2016-04-30-preview" ,
       "location": "[resourceGroup().location]",
       "dependsOn": [
         "[concat('Microsoft.Network/networkInterfaces/', variables('nicName'))]"
@@ -182,7 +182,7 @@
       "dependsOn": []
     },
     {
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2016-04-30-preview" ,
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'), '/JoinDomain')]",
       "location": "[resourceGroup().location]",
@@ -201,14 +201,14 @@
           "Password": "[parameters('domainJoinPassword')]"
         },
         "dependsOn": [
-          "[resourceId('Microsoft.Compute/virtualMachines', parameters('vmName'))]"
+          "[concat('Microsoft.Compute/virtualMachines/', parameters('vmName'))]"
         ]
       }
     },
     {
       "type": "Microsoft.Compute/virtualMachines/extensions",
       "name": "[concat(parameters('vmName'), '/customScriptExtension')]",
-      "apiVersion": "2016-03-30",
+      "apiVersion": "2016-04-30-preview" ,
       "location": "[resourceGroup().location]",
       "properties": {
         "publisher": "Microsoft.Compute",
